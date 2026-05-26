@@ -248,6 +248,7 @@ namespace ExtratorDiariosOficiais
                 progressBarExtracao.Value = 0;
                 progressBarExtracao.Visible = true;
 
+                lblStatusExtracao.Text = "Extração em andamento";
                 lblProgressoExtracao.Text = $"0 de {totalPaginas} páginas processadas";
                 lblProgressoExtracao.Visible = true;
             });
@@ -264,7 +265,24 @@ namespace ExtratorDiariosOficiais
 
         private void AtualizarEstadoExtracao(bool emAndamento)
         {
-            ExecutarNaUiThread(() => btn_Extrair.Enabled = !emAndamento);
+            ExecutarNaUiThread(() =>
+            {
+                btn_Extrair.Enabled = !emAndamento;
+                btn_Extrair.BackColor = emAndamento
+                    ? Color.FromArgb(148, 163, 184)
+                    : Color.FromArgb(35, 99, 235);
+                btn_Extrair.Text = emAndamento ? "Extraindo..." : "Extrair dados";
+
+                if (emAndamento)
+                {
+                    lblStatusExtracao.Text = "Preparando extração";
+                    lblProgressoExtracao.Text = "Carregando dados do Diário Oficial";
+                    lblProgressoExtracao.Visible = true;
+                    return;
+                }
+
+                lblStatusExtracao.Text = "Pronto para extrair";
+            });
         }
 
         private void MostrarMensagem(string mensagem)
